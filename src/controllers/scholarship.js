@@ -1,35 +1,46 @@
 const {validationResult} = require('express-validator');
+const Scholarship = require('../models/scholarship');
 
 exports.createScholarship = (req, res, next) => {
-  const body = req.body;
-
   const errors = validationResult(req);
-
+  
   if(!errors.isEmpty()) {
-    const err = new Error('Invalid Value');
+    const err = new Error('Input tidak sesuai');
     err.status = 400;
     err.data = errors.array();
     
     throw err;
   }
-  
-  const result = {
-    message: "scholarship information has been added successfully",
-    data: {
-      scholarship_id: 1,
-      title: body.title,
-      poster: "imagefile.jpg",
-      deadline: body.deadline,
-      description: body.description,
-      created_at: "12/11/2021",
-      author: {
-        user_id: 1,
-        name: "windayani",
-      }
-    },
-  };
 
-  res.status(201).json(result);
+  if(!req.file) {
+    const err = new Error('Poster belum dikirim');
+    err.status = 422;
+    
+    throw err;
+  }
+  
+  const body = req.body;
+  const poster = req.file.path;
+
+  const scholarship = new Scholarship({
+    title: body.title,
+    poster: poster,
+    deadline: body.deadline,
+    description: body.description,
+    author: {
+      user_id: 1,
+      name: 'windayani',
+    },
+  });
+
+  scholarship.save()
+    .then((result) => {
+      res.status(201).json({
+        message: 'scholarship information has been added successfully',
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
 }
 
 exports.getAllScholarships = (req, res, next) => {

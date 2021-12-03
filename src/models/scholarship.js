@@ -6,6 +6,10 @@ const ScholarshipSchema = new Schema({
     type: String,
     required: true,
   },
+  poster: {
+    type: String,
+    required: true,
+  },
   deadline: {
     type: Date,
     required: true,
