@@ -1,7 +1,8 @@
 const {validationResult} = require('express-validator');
 const Scholarship = require('../models/scholarship');
+const { post } = require('../routes/scholarship');
 
-exports.createScholarship = (req, res, next) => {
+const inputValidator = (req) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
@@ -18,6 +19,10 @@ exports.createScholarship = (req, res, next) => {
     
     throw err;
   }
+}
+
+exports.createScholarship = (req, res, next) => {
+  inputValidator(req);
   
   const body = req.body;
   const poster = req.file.path;
@@ -36,7 +41,7 @@ exports.createScholarship = (req, res, next) => {
   scholarship.save()
     .then((result) => {
       res.status(201).json({
-        message: 'scholarship information has been added successfully',
+        message: 'Berhasil menambahkan informasi beasiswa.',
         data: result,
       });
     })
@@ -44,15 +49,67 @@ exports.createScholarship = (req, res, next) => {
 }
 
 exports.getAllScholarships = (req, res, next) => {
-  res.json(
-    {
-      message: "Get all scholarship success", 
-      data: {
-        id: 1,
-        title: "Beasiswa Djarum Mahasiswa 2022",
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus facere sit exercitationem natus, nisi possimus itaque recusandae veritatis impedit. Totam?"
+  Scholarship.find()
+    .then((result) => {
+      res.status(200).json({
+        message: 'Berhasil mendapatkan semua informasi beasiswa.', 
+        data: result,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+exports.getScholarshipById = (req, res, next) => {
+  Scholarship.findById(req.params.scholarshipId)
+    .then((result) => {
+      if (!result) {
+        const error = new Error('Beasiswa tidak ditemukan.');
+        error.errorStatus = 404;
+        
+        throw error;
       }
-    }
-  );
-  next();
+
+      res.status(200).json({
+        message: 'Berhasil mendapatkan informasi beasiswa.',
+        data: result,
+      })
+    })
+    .catch((error) => {
+      next(error);
+    })
+}
+
+exports.updateScholarship = (req, res, next) => {
+  inputValidator(req);
+  
+  const body = req.body;
+  const poster = req.file.path;
+
+  Scholarship.findById(req.params.scholarshipId)
+    .then((scholarship) => {
+      if (!scholarship) {
+        const error = new Error('Informasi beasiswa tidak ditemukan.');
+        error.errorStatus = 404;
+
+        throw error;
+      }
+
+      scholarship.title = body.title;
+      scholarship.poster = poster;
+      scholarship.deadline = body.deadline;
+      scholarship.description = body.description;
+
+      return scholarship.save();
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: 'Informasi beasiswa berhasil diperbarui',
+        data: result,
+      });
+    })
+    .catch((error) => {
+      next(error);
+    });
 }

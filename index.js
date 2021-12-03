@@ -2,6 +2,7 @@ const express = require('express');
 const scholarshipRoutes = require('./src/routes/scholarship');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const path = require('path');
 
 const port = 4000;
 const app = express();
@@ -25,6 +26,7 @@ const fileFilter = (req, file, callback) => {
 }
 
 app.use(express.json());
+app.use('/v1/images', express.static(path.resolve(__dirname, 'images')));
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('poster'));
 
 app.use((req, res, next) => {
