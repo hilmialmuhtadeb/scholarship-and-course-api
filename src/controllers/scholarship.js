@@ -62,12 +62,26 @@ exports.createScholarship = (req, res, next) => {
 }
 
 exports.getAllScholarships = (req, res, next) => {
+  const currentPage = +req.query.page || 1;
+  const perPage = +req.query.perPage || 3;
+  let totalItems;
+
   Scholarship.find()
-    .then((result) => {
-      res.status(200).json({
-        message: 'Berhasil mendapatkan semua informasi beasiswa.', 
-        data: result,
-      });
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Scholarship.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage)
+        .then((result) => {
+          res.status(200).json({
+            message: 'Berhasil mendapatkan semua informasi beasiswa.', 
+            data: result,
+            total_data: totalItems,
+            per_page: perPage,
+            current_page: currentPage,
+          });
+        })
     })
     .catch((err) => {
       next(err);
@@ -139,5 +153,5 @@ exports.deleteScholarship = (req, res, next) => {
           data: result,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => next(err));
 }
