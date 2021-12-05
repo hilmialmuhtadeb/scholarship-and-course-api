@@ -1,8 +1,9 @@
 const {validationResult} = require('express-validator');
 const Scholarship = require('../models/scholarship');
-const { post } = require('../routes/scholarship');
+const path = require('path');
+const fs = require('fs');
 
-const inputValidator = (req) => {
+const _inputValidator = (req) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
@@ -21,8 +22,20 @@ const inputValidator = (req) => {
   }
 }
 
+const _throwScholarshipNotFoundError = () => {
+  const error = new Error('Informasi beasiswa tidak ditemukan.');
+  error.errorStatus = 404;
+
+  throw error;
+}
+
+const _removeScholarshipPoster = (posterLocation) => {
+  const filePath = path.resolve(__dirname, '../..', posterLocation);
+  fs.unlink(filePath, (err) => console.log(err));
+}
+
 exports.createScholarship = (req, res, next) => {
-  inputValidator(req);
+  _inputValidator(req);
   
   const body = req.body;
   const poster = req.file.path;
@@ -63,26 +76,23 @@ exports.getAllScholarships = (req, res, next) => {
 
 exports.getScholarshipById = (req, res, next) => {
   Scholarship.findById(req.params.scholarshipId)
-    .then((result) => {
-      if (!result) {
-        const error = new Error('Beasiswa tidak ditemukan.');
-        error.errorStatus = 404;
-        
-        throw error;
+    .then((scholarship) => {
+      if (!scholarship) {
+        _throwScholarshipNotFoundError();
       }
 
       res.status(200).json({
         message: 'Berhasil mendapatkan informasi beasiswa.',
-        data: result,
-      })
+        data: scholarship,
+      });
     })
     .catch((error) => {
       next(error);
-    })
+    });
 }
 
 exports.updateScholarship = (req, res, next) => {
-  inputValidator(req);
+  _inputValidator(req);
   
   const body = req.body;
   const poster = req.file.path;
@@ -90,11 +100,10 @@ exports.updateScholarship = (req, res, next) => {
   Scholarship.findById(req.params.scholarshipId)
     .then((scholarship) => {
       if (!scholarship) {
-        const error = new Error('Informasi beasiswa tidak ditemukan.');
-        error.errorStatus = 404;
-
-        throw error;
+        _throwScholarshipNotFoundError();
       }
+
+      _removeScholarshipPoster(scholarship.poster);
 
       scholarship.title = body.title;
       scholarship.poster = poster;
@@ -112,4 +121,23 @@ exports.updateScholarship = (req, res, next) => {
     .catch((error) => {
       next(error);
     });
+}
+
+exports.deleteScholarship = (req, res, next) => {
+  Scholarship.findById(req.params.scholarshipId)
+    .then((scholarship) => {
+      if (!scholarship) {
+        _throwScholarshipNotFoundError();
+      }
+
+      _removeScholarshipPoster(scholarship.poster);
+      return Scholarship.findByIdAndRemove(req.params.scholarshipId)
+    })
+      .then((result) => {
+        res.status(200).json({
+          message: 'Beasiswa berhasil dihapus.',
+          data: result,
+        });
+      })
+      .catch((err) => console.log(err));
 }

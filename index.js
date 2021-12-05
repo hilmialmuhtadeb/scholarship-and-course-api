@@ -27,6 +27,7 @@ const fileFilter = (req, file, callback) => {
 
 app.use(express.json());
 app.use('/v1/images', express.static(path.resolve(__dirname, 'images')));
+
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('poster'));
 
 app.use((req, res, next) => {
@@ -44,6 +45,7 @@ app.use((error, req, res, next) => {
     data: error.data,
   });
 });
+
 
 mongoose.connect('mongodb+srv://hilmialmuhtadeb:scholarshipandcourse@cluster0.vi3ry.mongodb.net/scholarship?retryWrites=true&w=majority')
   .then(() => {

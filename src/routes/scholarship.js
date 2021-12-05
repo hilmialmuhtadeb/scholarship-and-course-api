@@ -15,6 +15,8 @@ router.get('/scholarship/:scholarshipId', scholarshipController.getScholarshipBy
 
 router.put('/scholarship/:scholarshipId', scholarshipValidation, scholarshipController.updateScholarship);
 
+router.delete('/scholarship/:scholarshipId', scholarshipController.deleteScholarship);
+
 router.post('/scholarship', scholarshipValidation, scholarshipController.createScholarship);
 
 
