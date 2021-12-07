@@ -43,7 +43,7 @@ app.use((error, req, res, next) => {
 });
 
 
-mongoose.connect('mongodb+srv://hilmialmuhtadeb:scholarshipandcourse@cluster0.vi3ry.mongodb.net/scholarship?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://hilmialmuhtadeb:scholarshipandcourse@cluster0.vi3ry.mongodb.net/scholarship?retryWrites=true&w=majority', { useNewUrlParser: true,useUnifiedTopology: true })
   .then(() => {
     app.listen(port, () => {
       console.log(`Your app is running at http://localhost:${port}`);
