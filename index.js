@@ -3,6 +3,7 @@ const scholarshipRoutes = require('./src/routes/scholarship');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
+const cors = require('cors');
 
 const port = 4000;
 const app = express();
@@ -30,12 +31,7 @@ app.use('/v1/images', express.static(path.resolve(__dirname, 'images')));
 
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('poster'));
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+app.use(cors());
 
 app.use('/v1', scholarshipRoutes);
 

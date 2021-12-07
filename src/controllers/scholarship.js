@@ -63,7 +63,7 @@ exports.createScholarship = (req, res, next) => {
 
 exports.getAllScholarships = (req, res, next) => {
   const currentPage = +req.query.page || 1;
-  const perPage = +req.query.perPage || 3;
+  const perPage = +req.query.perPage || 9;
   let totalItems;
 
   Scholarship.find()
