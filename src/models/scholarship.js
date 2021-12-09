@@ -4,23 +4,23 @@ const { Schema } = mongoose;
 const ScholarshipSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   poster: {
     type: String,
-    required: true,
+    required: false,
   },
   deadline: {
     type: Date,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   author: {
     type: Object,
-    required: true,
+    required: false,
   }
 }, {
   timestamps: true

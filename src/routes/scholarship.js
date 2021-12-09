@@ -13,7 +13,7 @@ router.get('/scholarships', scholarshipController.getAllScholarships);
 
 router.get('/scholarship/:scholarshipId', scholarshipController.getScholarshipById);
 
-router.put('/scholarship/:scholarshipId', scholarshipValidation, scholarshipController.updateScholarship);
+router.patch('/scholarship/:scholarshipId', scholarshipController.updateScholarship);
 
 router.delete('/scholarship/:scholarshipId', scholarshipController.deleteScholarship);
 

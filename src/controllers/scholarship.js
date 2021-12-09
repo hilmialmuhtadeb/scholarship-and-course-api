@@ -7,16 +7,10 @@ const _inputValidator = (req) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
+    console.log('masuk sini')
     const err = new Error('Input tidak sesuai');
     err.status = 400;
     err.data = errors.array();
-    
-    throw err;
-  }
-
-  if(!req.file) {
-    const err = new Error('Poster belum dikirim');
-    err.status = 422;
     
     throw err;
   }
@@ -24,7 +18,7 @@ const _inputValidator = (req) => {
 
 const _throwScholarshipNotFoundError = () => {
   const error = new Error('Informasi beasiswa tidak ditemukan.');
-  error.errorStatus = 404;
+  error.status = 404;
 
   throw error;
 }
@@ -73,6 +67,9 @@ exports.getAllScholarships = (req, res, next) => {
       return Scholarship.find()
         .skip((currentPage - 1) * perPage)
         .limit(perPage)
+        .sort({
+          updatedAt: -1,
+        })
         .then((result) => {
           res.status(200).json({
             message: 'Berhasil mendapatkan semua informasi beasiswa.', 
@@ -109,7 +106,10 @@ exports.updateScholarship = (req, res, next) => {
   _inputValidator(req);
   
   const body = req.body;
-  const poster = req.file.path;
+  let poster;
+  if (req.file !== undefined) {
+    poster = req.file.path;
+  }
 
   Scholarship.findById(req.params.scholarshipId)
     .then((scholarship) => {
@@ -117,12 +117,22 @@ exports.updateScholarship = (req, res, next) => {
         _throwScholarshipNotFoundError();
       }
 
-      _removeScholarshipPoster(scholarship.poster);
+      if(!!poster) {
+        _removeScholarshipPoster(scholarship.poster);
+        scholarship.poster = poster;
+      }
 
-      scholarship.title = body.title;
-      scholarship.poster = poster;
-      scholarship.deadline = body.deadline;
-      scholarship.description = body.description;
+      if (!!body.title) {
+        scholarship.title = body.title;
+      }
+
+      if (!!body.deadline) {
+        scholarship.deadline = body.deadline;
+      }
+
+      if (!!body.description) {
+        scholarship.description = body.description;
+      }
 
       return scholarship.save();
     })
@@ -133,6 +143,7 @@ exports.updateScholarship = (req, res, next) => {
       });
     })
     .catch((error) => {
+      console.log('masuk sini')
       next(error);
     });
 }
