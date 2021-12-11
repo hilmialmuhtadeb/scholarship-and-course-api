@@ -7,7 +7,6 @@ const _inputValidator = (req) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
-    console.log('masuk sini')
     const err = new Error('Input tidak sesuai');
     err.status = 400;
     err.data = errors.array();
@@ -32,6 +31,7 @@ exports.createScholarship = (req, res, next) => {
   _inputValidator(req);
   
   const body = req.body;
+  console.log(req.body);
   const poster = req.file.path;
 
   const scholarship = new Scholarship({
@@ -39,6 +39,7 @@ exports.createScholarship = (req, res, next) => {
     poster: poster,
     deadline: body.deadline,
     description: body.description,
+    category: body.category,
     author: {
       user_id: 1,
       name: 'windayani',
@@ -58,13 +59,17 @@ exports.createScholarship = (req, res, next) => {
 exports.getAllScholarships = (req, res, next) => {
   const currentPage = +req.query.page || 1;
   const perPage = +req.query.perPage || 9;
-  let totalItems;
+  const category = +req.query.category || 1;
 
-  Scholarship.find()
+  Scholarship.find({
+    category: category,
+  })
     .countDocuments()
     .then((count) => {
-      totalItems = count;
-      return Scholarship.find()
+      const totalItems = count;
+      return Scholarship.find({
+        category: category,
+      })
         .skip((currentPage - 1) * perPage)
         .limit(perPage)
         .sort({
@@ -130,6 +135,10 @@ exports.updateScholarship = (req, res, next) => {
         scholarship.deadline = body.deadline;
       }
 
+      if (!!body.category) {
+        scholarship.category = body.category;
+      }
+
       if (!!body.description) {
         scholarship.description = body.description;
       }
@@ -143,7 +152,6 @@ exports.updateScholarship = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log('masuk sini')
       next(error);
     });
 }

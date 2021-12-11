@@ -14,6 +14,10 @@ const ScholarshipSchema = new Schema({
     type: Date,
     required: false,
   },
+  category: {
+    type: Number,
+    required: false,
+  },
   description: {
     type: String,
     required: false,

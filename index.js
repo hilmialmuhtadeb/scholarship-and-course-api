@@ -17,19 +17,22 @@ const fileStorage = multer.diskStorage({
   }
 })
 
-const fileFilter = (req, file, callback) => {
-  const mimeTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
-  if (mimeTypes.indexOf(file.mimetype)) {
-    callback(null, true);
-  } else {
-    callback(null, false);
+const fileFilter = (req, file, cb) => {
+  const fileTypes = /jpeg|jpg|png/;
+  const mimetype = fileTypes.test(file.mimetype);
+  if (mimetype) {
+    return cb(null, true);
   }
+  cb("Error: File yang anda kirim tidak valid");
 }
 
 app.use(express.json());
 app.use('/v1/images', express.static(path.resolve(__dirname, 'images')));
 
-app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('poster'));
+app.use(multer({
+  storage: fileStorage, 
+  fileFilter: fileFilter
+}).single('poster'));
 
 app.use(cors());
 

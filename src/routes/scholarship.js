@@ -6,6 +6,7 @@ const router = express.Router();
 const scholarshipValidation = [
   body('title').notEmpty().withMessage('Judul tidak boleh kosong').isLength({min: 10}).withMessage('judul harus memiliki 10 karakter atau lebih'),
   body('deadline').notEmpty().withMessage('Batas pengajuan tidak boleh kosong'),
+  body('category').notEmpty().withMessage('Kategori tidak boleh kosong'),
   body('description').notEmpty().withMessage('Deskripsi tidak boleh kosong'),
 ];
 
