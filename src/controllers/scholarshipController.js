@@ -1,4 +1,4 @@
-const {validationResult} = require('express-validator');
+const { validationResult } = require('express-validator');
 const Scholarship = require('../models/scholarship');
 const path = require('path');
 const fs = require('fs');
@@ -7,11 +7,11 @@ const _inputValidator = (req) => {
   const errors = validationResult(req);
   
   if(!errors.isEmpty()) {
-    const err = new Error('Input tidak sesuai');
-    err.status = 400;
-    err.data = errors.array();
+    const error = new Error('Input tidak sesuai');
+    error.status = 400;
+    error.data = errors.array();
     
-    throw err;
+    throw error;
   }
 }
 
@@ -27,11 +27,10 @@ const _removeScholarshipPoster = (posterLocation) => {
   fs.unlink(filePath, (err) => console.log(err));
 }
 
-exports.createScholarship = (req, res, next) => {
+const createScholarship = (req, res, next) => {
   _inputValidator(req);
   
   const body = req.body;
-  console.log(req.body);
   const poster = req.file.path;
 
   const scholarship = new Scholarship({
@@ -56,7 +55,7 @@ exports.createScholarship = (req, res, next) => {
     .catch((err) => console.log(err));
 }
 
-exports.getAllScholarships = (req, res, next) => {
+const getAllScholarships = (req, res, next) => {
   const currentPage = +req.query.page || 1;
   const perPage = +req.query.perPage || 9;
   const category = +req.query.category || 1;
@@ -90,7 +89,7 @@ exports.getAllScholarships = (req, res, next) => {
     });
 }
 
-exports.getScholarshipById = (req, res, next) => {
+const getScholarshipById = (req, res, next) => {
   Scholarship.findById(req.params.scholarshipId)
     .then((scholarship) => {
       if (!scholarship) {
@@ -107,7 +106,7 @@ exports.getScholarshipById = (req, res, next) => {
     });
 }
 
-exports.updateScholarship = (req, res, next) => {
+const updateScholarship = (req, res, next) => {
   _inputValidator(req);
   
   const body = req.body;
@@ -156,7 +155,7 @@ exports.updateScholarship = (req, res, next) => {
     });
 }
 
-exports.deleteScholarship = (req, res, next) => {
+const deleteScholarship = (req, res, next) => {
   Scholarship.findById(req.params.scholarshipId)
     .then((scholarship) => {
       if (!scholarship) {
@@ -173,4 +172,12 @@ exports.deleteScholarship = (req, res, next) => {
         });
       })
       .catch((err) => next(err));
+}
+
+module.exports =  {
+  createScholarship,
+  getAllScholarships,
+  getScholarshipById,
+  updateScholarship,
+  deleteScholarship,
 }

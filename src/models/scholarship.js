@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const ScholarshipSchema = new Schema({
+const Scholarship = new Schema({
   title: {
     type: String,
-    required: false,
+    required: true,
   },
   poster: {
     type: String,
@@ -12,22 +12,22 @@ const ScholarshipSchema = new Schema({
   },
   deadline: {
     type: Date,
-    required: false,
+    required: true,
   },
   category: {
     type: Number,
-    required: false,
+    required: true,
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   author: {
     type: Object,
-    required: false,
+    required: true,
   }
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Scholarship', ScholarshipSchema);
+module.exports = mongoose.model('Scholarship', Scholarship);
