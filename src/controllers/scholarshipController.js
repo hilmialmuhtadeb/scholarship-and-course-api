@@ -27,7 +27,7 @@ const _removeScholarshipPoster = (posterLocation) => {
   fs.unlink(filePath, (err) => console.log(err));
 }
 
-const createScholarship = (req, res, next) => {
+const createScholarship = async (req, res, next) => {
   _inputValidator(req);
   
   const body = req.body;
@@ -40,8 +40,8 @@ const createScholarship = (req, res, next) => {
     description: body.description,
     category: body.category,
     author: {
-      user_id: 1,
-      name: 'windayani',
+      user_id: body.user_id,
+      name: body.user_name,
     },
   });
 
