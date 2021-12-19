@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 
 const scholarshipRoutes = require('./src/routes/scholarshipRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const favoriteRoutes = require('./src/routes/favoriteRoutes');
 
 const port = 4000;
 const app = express();
@@ -43,6 +44,7 @@ app.use(multer({
 
 app.use('/v1/images', express.static(path.resolve(__dirname, 'images')));
 app.use('/v1/scholarships', scholarshipRoutes);
+app.use('/v1/favorites', favoriteRoutes);
 app.use('/v1/auth', authRoutes);
 
 

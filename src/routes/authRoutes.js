@@ -20,9 +20,5 @@ router.post('/register', authValidation, authController.register);
 router.post('/login', authValidation, authController.login);
 router.post('/logout', verifyToken, authController.logout);
 router.get('/user', authController.getUser);
-router.get('/alluser', async (req, res) => {
-  const users = await user.find();
-  res.send({users});
-});
 
 module.exports = router;
