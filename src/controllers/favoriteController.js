@@ -37,7 +37,7 @@ const removeFavorite = async (req, res, next) => {
 const getFavoritesByUsername = async (req, res, next) => {
   try {
     const username = req.params.username;
-    const favorites = await Favorite.find({ username });
+    const favorites = await Favorite.find({ username }).sort({updatedAt: -1});
   
     let scholarships = [];
   
