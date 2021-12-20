@@ -43,9 +43,9 @@ const register = async (req, res, next) => {
         });
       })
       .catch((error) => {
-        res.status(500).json({
+        res.status(400).json({
           status: res.statusCode,
-          message: 'Gagal membuat akun.'
+          message: 'Semua kolom wajib diisi.'
         })
       })
     

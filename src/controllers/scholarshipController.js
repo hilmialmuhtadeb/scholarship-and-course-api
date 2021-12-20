@@ -52,7 +52,12 @@ const createScholarship = async (req, res, next) => {
         data: result,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.status(400).json({
+        status: res.statusCode,
+        message: 'Semua kolom wajib diisi.'
+      })
+    });
 }
 
 const getAllScholarships = (req, res, next) => {
