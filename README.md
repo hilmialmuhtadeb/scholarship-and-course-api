@@ -22,6 +22,10 @@
 - [Update Scholarship](#update-scholarship)
 - [Delete Scholarship](#delete-scholarship)
 - [Remove Scholarship from Favorited](#remove-scholarship-from-favorited)
+- [Register User](#register-user)
+- [Login User](#login-user)
+- [Logout User](#logout-user)
+- [Get Authenticated User](#get-authenticated-user)
 - [Credit](#credit)
 
 
@@ -246,9 +250,123 @@ Menambahkan informasi beasiswa
 }
 ```
 
+## Update Scholarship
 
+Mengubah detail beasiswa
+
+- ### URL
+
+  /v1/scholarships/:scholarshipId
+
+- ### Method
+
+  PATCH
+  
+- ### Headers
+
+  Content-Type : multipart/form-data
+
+- ### Body
+
+  - title : string
+  - poster : file image
+  - deadline : date
+  - category : number
+  - description : text
+
+- ### Response
+
+```json
+{
+    "message": "Informasi beasiswa berhasil diperbarui",
+    "data": {
+        "_id": "61c4ebc4318fb084ac375cd9",
+        "title": "beasiswa akuarium",
+        "poster": "images\\1640295498332-5c8a2166dbfbd8903e112bb8b56e80318bbce952fdbcfb408c4121bc73b813a5.jpg",
+        "deadline": "2022-11-10T00:00:00.000Z",
+        "description": "lorem ipsum dolor sit amet",
+        "category": 1,
+        "createdAt": "2021-12-23T21:36:04.039Z",
+        "updatedAt": "2021-12-23T21:36:04.039Z",
+        "__v": 0
+    }
+}
+```
+
+## Delete Scholarship
+
+Menghapus informasi beasiswa
+
+- ### URL
+
+  /v1/scholarships/:scholarshipId
+
+- ### Method
+
+  DELETE
+
+- ### Response
+
+```json
+{
+    "message": "Beasiswa berhasil dihapus.",
+    "data": {
+        "_id": "61c4ebc4318fb084ac375cd9",
+        "title": "beasiswa glints informatics",
+        "poster": "images\\1640295363979-1e29434802ce1e4aaa7ca8e8d09830cdd3386a82de207c017fe769b3fc334422.jpg",
+        "deadline": "2021-10-29T00:00:00.000Z",
+        "description": "bilia curae nulla dapibus dolor vel est donec odio ",
+        "category": 2,
+        "createdAt": "2021-12-23T21:36:04.039Z",
+        "updatedAt": "2021-12-23T21:36:04.039Z",
+        "__v": 0
+    }
+}
+```
+
+## Remove Scholarship from Favorited
+
+Menghapus beasiswa dari favorit
+
+- ### URL
+
+  /v1/favorites?username=:username&scholarshipId=:scholarshipId
+
+- ### Method
+
+  DELETE
+
+- ### Response
+
+```json
+Berhasil menghapus informasi beasiswa dari favorit.
+```
 
 ## Register User
+
+Mendaftarkan user baru
+
+- ### URL
+
+  /v1/auth/register
+
+- ### Method
+
+  POST
+  
+- ### Headers
+
+  Content-Type : multipart/form-data
+
+- ### Body
+
+  - name : string
+  - username : string
+  - password : string
+
+- ### Response
+
+```json
 {
     "status": 201,
     "message": "User baru berhasil dibuat.",
@@ -262,8 +380,89 @@ Menambahkan informasi beasiswa
         "__v": 0
     }
 }
+```
 
 ## Login User
+
+Menambahkan informasi user yang sedang login
+
+- ### URL
+
+  /v1/auth/login
+
+- ### Method
+
+  POST
+  
+- ### Headers
+
+  Content-Type : multipart/form-data
+
+- ### Body
+
+  - username : string
+  - password : string
+
+- ### Response
+
+```json
 {
     "message": "success"
 }
+```
+
+## Logout User
+
+Menghapus cookie token informasi login user
+
+- ### URL
+
+  /v1/auth/logout
+
+- ### Method
+
+  POST
+
+- ### Response
+
+```json
+{
+    "message": "success"
+}
+```
+
+## Get Authenticated User
+
+Mendapatkan informasi user yang sedang login
+
+- ### URL
+  
+  /v1/auth/user
+    
+- ### Method
+
+  GET
+
+- ### Response
+
+```json
+{
+    "_id": "61c35de5475b50844c0ea4fa",
+    "username": "hilmialmuhtadeb",
+    "name": "Hilmi Almuhtade",
+    "createdAt": "2021-12-22T17:18:29.232Z",
+    "updatedAt": "2021-12-22T17:18:29.232Z",
+    "__v": 0
+}
+```
+
+
+
+## Credit
+
+Terima kasih kepada :
+- Node JS
+- Express JS
+- Mongoose
+- jsonwebtoken
+- nodemon
