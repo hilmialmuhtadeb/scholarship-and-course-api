@@ -3,10 +3,10 @@
     <img src="https://github.com/hilmialmuhtadeb/scholarship-and-course/blob/main/src/assets/images/snc1.png" alt="Logo" width=120 height=120>
   </a>
 
-  <h3 align="center">Scholarship and Course API</h3>
+  <h3 align="center">Scholarship and Course API 📚</h3>
 
   <p align="center">
-    API for scholarship and course application.
+    API Documentations for scholarship and course application.
   </p>
 </p>
 
